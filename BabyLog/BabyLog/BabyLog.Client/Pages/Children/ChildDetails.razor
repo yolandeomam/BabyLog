@@ -1,0 +1,174 @@
+﻿@page "/children/details/{ChildId:int}"
+@rendermode InteractiveServer
+@inject BabyLog.Client.ViewModels.ChildViewModel ViewModel
+@inject BabyLog.Client.Services.TokenStorageService TokenStorage
+@inject NavigationManager Navigation
+
+<div class="container py-4">
+
+    <!-- Page title -->
+    <div class="mb-4">
+
+        <h2 class="mb-1">
+            Barnets profil
+        </h2>
+
+        <p class="text-muted mb-0">
+            Se oplysninger om barnet.
+        </p>
+
+    </div>
+
+    @if (ViewModel.SelectedChild == null)
+    {
+        <!-- Loading state -->
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+
+            <p class="mb-0">
+                Indlæser...
+            </p>
+
+        </div>
+    }
+    else
+    {
+        <!-- Child details card -->
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+
+            <!-- Child avatar + name -->
+            <div class="d-flex align-items-center mb-4">
+
+                <div class="child-avatar me-3">
+                    👶
+                </div>
+
+                <div>
+
+                    <h4 class="mb-0">
+                        @ViewModel.SelectedChild.FirstName
+                    </h4>
+
+                    <small class="text-muted">
+                        Barnets profil
+                    </small>
+
+                </div>
+
+            </div>
+
+            <!-- Child information -->
+            <p>
+                <strong>Fornavn:</strong>
+                @ViewModel.SelectedChild.FirstName
+            </p>
+
+            <p>
+                <strong>Fødselsdato:</strong>
+                @ViewModel.SelectedChild.BirthDate.ToShortDateString()
+            </p>
+
+            <p>
+                <strong>Køn:</strong>
+                @ViewModel.SelectedChild.Gender
+            </p>
+
+            <p>
+                <strong>Oprettet:</strong>
+                @ViewModel.SelectedChild.ChildCreatedDate.ToShortDateString()
+            </p>
+
+            <!-- Action buttons -->
+            <div class="d-flex gap-2 mt-4">
+
+                <button class="btn btn-primary rounded-pill flex-fill"
+                        @onclick="Opdater">
+                    Opdater
+                </button>
+
+                <button class="btn btn-outline-secondary rounded-pill flex-fill"
+                        @onclick="Tilbage">
+                    Tilbage
+                </button>
+
+            </div>
+
+        </div>
+    }
+</div>
+
+<style>
+    .child-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background-color: #f7e7dc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.7rem;
+    }
+
+    .card {
+        background-color: #fffdfb;
+    }
+
+    .btn-primary {
+        background-color: #c98f76;
+        border-color: #c98f76;
+    }
+
+        .btn-primary:hover {
+            background-color: #b77c63;
+            border-color: #b77c63;
+        }
+</style>
+
+@code {
+
+    // ChildId from route
+    [Parameter]
+    public int ChildId { get; set; }
+
+    // JWT token from query string
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    // Reuse token during navigation
+    private string TokenQuery =>
+        string.IsNullOrWhiteSpace(Token)
+            ? ""
+            : $"?token={Uri.EscapeDataString(Token)}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Save newest token
+        if (!string.IsNullOrWhiteSpace(Token))
+        {
+            TokenStorage.Token = Token;
+
+            // Clear old ViewModel data
+            ViewModel.SelectedChild = null;
+            ViewModel.CurrentCustomer = null;
+            ViewModel.ErrorMessage = null;
+        }
+
+        // Load selected child
+        await ViewModel.LoadChildAsync(ChildId);
+    }
+
+    // Navigate to update page
+    private void Opdater()
+    {
+        Navigation.NavigateTo(
+            $"/children/update/{ChildId}{TokenQuery}"
+        );
+    }
+
+    // Navigate back to children page
+    private void Tilbage()
+    {
+        Navigation.NavigateTo(
+            $"/children{TokenQuery}"
+        );
+    }
+}

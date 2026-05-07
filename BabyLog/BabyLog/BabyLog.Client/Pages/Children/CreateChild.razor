@@ -1,0 +1,184 @@
+﻿@page "/children/create"
+@rendermode InteractiveServer
+@using BabyLog.Client.Models
+@inject BabyLog.Client.ViewModels.ChildViewModel ViewModel
+@inject BabyLog.Client.Services.TokenStorageService TokenStorage
+@inject NavigationManager Navigation
+
+<div class="container py-4">
+
+    <!-- Page title -->
+    <div class="mb-4">
+
+        <h2 class="mb-1">
+            Opret barn
+        </h2>
+
+        <p class="text-muted mb-0">
+            Udfyld få oplysninger for hurtigt at oprette barnets profil.
+        </p>
+
+    </div>
+
+    <!-- Create child form card -->
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+
+        <!-- Error message -->
+        @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+        {
+            <div class="alert alert-danger">
+                @ViewModel.ErrorMessage
+            </div>
+        }
+
+        <!-- Create child form -->
+        <EditForm Model="child" OnValidSubmit="GemBarn">
+
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <!-- First name -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Fornavn
+                </label>
+
+                <InputText class="form-control rounded-pill"
+                           @bind-Value="child.FirstName" />
+
+            </div>
+
+            <!-- Birth date -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Fødselsdato
+                </label>
+
+                <InputDate class="form-control rounded-pill"
+                           @bind-Value="child.BirthDate" />
+
+            </div>
+
+            <!-- Gender -->
+            <div class="mb-4">
+
+                <label class="form-label">
+                    Køn
+                </label>
+
+                <InputSelect class="form-control rounded-pill"
+                             @bind-Value="child.Gender">
+
+                    <option value="@Gender.Male">
+                        Mand
+                    </option>
+
+                    <option value="@Gender.Female">
+                        Kvinde
+                    </option>
+
+                    <option value="@Gender.Other">
+                        Andet
+                    </option>
+
+                </InputSelect>
+
+            </div>
+
+            <!-- Action buttons -->
+            <div class="d-flex gap-2">
+
+                <button class="btn btn-primary rounded-pill flex-fill"
+                        type="submit">
+                    Gem barn
+                </button>
+
+                <button class="btn btn-outline-secondary rounded-pill flex-fill"
+                        type="button"
+                        @onclick="Annuller">
+                    Annuller
+                </button>
+
+            </div>
+
+        </EditForm>
+
+    </div>
+</div>
+
+<style>
+    .card {
+        background-color: #fffdfb;
+    }
+
+    .btn-primary {
+        background-color: #c98f76;
+        border-color: #c98f76;
+    }
+
+        .btn-primary:hover {
+            background-color: #b77c63;
+            border-color: #b77c63;
+        }
+
+    .form-control:focus {
+        border-color: #c98f76;
+        box-shadow: 0 0 0 0.2rem rgba(201, 143, 118, 0.2);
+    }
+</style>
+
+@code {
+
+    // JWT token from query string
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    // Reuse token during navigation
+    private string TokenQuery =>
+        string.IsNullOrWhiteSpace(Token)
+            ? ""
+            : $"?token={Uri.EscapeDataString(Token)}";
+
+    // New child object
+    private Child child = new()
+    {
+        BirthDate = DateTime.Today
+    };
+
+    protected override void OnInitialized()
+    {
+        // Save newest token
+        if (!string.IsNullOrWhiteSpace(Token))
+        {
+            TokenStorage.Token = Token;
+
+            // Clear old ViewModel data
+            ViewModel.CurrentCustomer = null;
+            ViewModel.ErrorMessage = null;
+        }
+    }
+
+    // Create child
+    private async Task GemBarn()
+    {
+        var success = await ViewModel.CreateChildAsync(child);
+
+        // Navigate back to children page
+        if (success)
+        {
+            Navigation.NavigateTo(
+                $"/children{TokenQuery}"
+            );
+        }
+    }
+
+    // Cancel and return to children page
+    private void Annuller()
+    {
+        Navigation.NavigateTo(
+            $"/children{TokenQuery}"
+        );
+    }
+}

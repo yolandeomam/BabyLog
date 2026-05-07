@@ -1,0 +1,155 @@
+﻿@page "/children/delete/{ChildId:int}"
+@rendermode InteractiveServer
+@inject BabyLog.Client.ViewModels.ChildViewModel ViewModel
+@inject BabyLog.Client.Services.TokenStorageService TokenStorage
+@inject NavigationManager Navigation
+
+<div class="container py-4">
+
+    <!-- Page title -->
+    <div class="mb-4">
+
+        <h2 class="mb-1">
+            Slet barn
+        </h2>
+
+        <p class="text-muted mb-0">
+            Bekræft sletning af barnets profil.
+        </p>
+
+    </div>
+
+    @if (ViewModel.SelectedChild == null)
+    {
+        <!-- Loading state -->
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+
+            <p class="mb-0">
+                Indlæser...
+            </p>
+
+        </div>
+    }
+    else
+    {
+        <!-- Delete confirmation card -->
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+
+            <div class="text-center">
+
+                <!-- Warning icon -->
+                <div class="delete-icon mb-3">
+                    ⚠️
+                </div>
+
+                <!-- Confirmation text -->
+                <h4>
+                    Er du sikker?
+                </h4>
+
+                <p class="text-muted">
+
+                    Du er ved at slette profilen for
+                    <strong>
+                        @ViewModel.SelectedChild.FirstName
+                    </strong>.
+
+                </p>
+
+                <p class="text-muted">
+                    Dette kan ikke fortrydes.
+                </p>
+
+                <!-- Action buttons -->
+                <div class="d-flex gap-2 mt-4">
+
+                    <button class="btn btn-outline-secondary rounded-pill flex-fill"
+                            @onclick="Annuller">
+                        Annuller
+                    </button>
+
+                    <button class="btn btn-danger rounded-pill flex-fill"
+                            @onclick="BekræftSlet">
+                        Slet
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+</div>
+
+<style>
+    .card {
+        background-color: #fffdfb;
+    }
+
+    .delete-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background-color: #fff1e8;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+    }
+</style>
+
+@code {
+
+    // ChildId from route
+    [Parameter]
+    public int ChildId { get; set; }
+
+    // JWT token from query string
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    // Reuse token during navigation
+    private string TokenQuery =>
+        string.IsNullOrWhiteSpace(Token)
+            ? ""
+            : $"?token={Uri.EscapeDataString(Token)}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Save newest token
+        if (!string.IsNullOrWhiteSpace(Token))
+        {
+            TokenStorage.Token = Token;
+
+            // Clear old ViewModel data
+            ViewModel.SelectedChild = null;
+            ViewModel.CurrentCustomer = null;
+            ViewModel.ErrorMessage = null;
+        }
+
+        // Load selected child
+        await ViewModel.LoadChildAsync(ChildId);
+    }
+
+    // Delete child
+    private async Task BekræftSlet()
+    {
+        var success = await ViewModel.DeleteChildAsync(ChildId);
+
+        // Navigate back to children page
+        if (success)
+        {
+            Navigation.NavigateTo(
+                $"/children{TokenQuery}"
+            );
+        }
+    }
+
+    // Cancel delete
+    private void Annuller()
+    {
+        Navigation.NavigateTo(
+            $"/children{TokenQuery}"
+        );
+    }
+}

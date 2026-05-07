@@ -1,0 +1,63 @@
+﻿@page "/babylog-login"
+@rendermode InteractiveServer
+@inject BabyLog.Client.Services.TokenStorageService TokenStorage
+@inject NavigationManager Navigation
+
+<div class="container py-4">
+
+    <!-- Loading message -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+
+        <h4 class="mb-3">
+            Logger ind i BabyLog...
+        </h4>
+
+        <p class="text-muted mb-0">
+            Du videresendes automatisk.
+        </p>
+
+    </div>
+
+</div>
+
+<style>
+
+    .card {
+        background-color: #fffdfb;
+    }
+
+</style>
+
+@code {
+
+    // JWT token from query string
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    // Prevent multiple redirects
+    private bool redirected = false;
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Only redirect once
+        if (!firstRender || redirected)
+            return Task.CompletedTask;
+
+        redirected = true;
+
+        // Save token and redirect
+        if (!string.IsNullOrWhiteSpace(Token))
+        {
+            // Save newest token
+            TokenStorage.Token = Token;
+
+            // Redirect to dashboard
+            Navigation.NavigateTo(
+                $"/dashboard?token={Uri.EscapeDataString(Token)}",
+                forceLoad: true
+            );
+        }
+
+        return Task.CompletedTask;
+    }
+}
