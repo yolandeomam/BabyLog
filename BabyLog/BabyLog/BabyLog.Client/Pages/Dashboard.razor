@@ -1,0 +1,226 @@
+﻿@page "/dashboard"
+@rendermode InteractiveServer
+@inject BabyLog.Client.Services.TokenStorageService TokenStorage
+@inject BabyLog.Client.ViewModels.ChildViewModel ChildViewModel
+@inject NavigationManager Navigation
+
+<div class="container py-4">
+
+    <!-- Dashboard header -->
+    <div class="dashboard-header card border-0 shadow-sm rounded-4 p-4 mb-4">
+
+        <span class="small text-muted">
+            BabyFællesskab
+        </span>
+
+        <h2 class="mb-1">
+            BabyLog
+        </h2>
+
+        <!-- Welcome message -->
+        @if (ChildViewModel.CurrentCustomer != null)
+        {
+            <p class="text-muted mb-0">
+                Velkommen, @ChildViewModel.CurrentCustomer.FirstName
+            </p>
+        }
+        else
+        {
+            <p class="text-muted mb-0">
+                Velkommen til BabyLog
+            </p>
+        }
+
+    </div>
+
+    <!-- Error message -->
+    @if (!string.IsNullOrEmpty(ChildViewModel.ErrorMessage))
+    {
+        <div class="alert alert-danger">
+            @ChildViewModel.ErrorMessage
+        </div>
+    }
+
+    <!-- Feature cards -->
+    <div class="row g-3">
+
+        <!-- Children feature -->
+        <div class="col-12 col-md-6 col-lg-4">
+
+            <div class="feature-card card border-0 shadow-sm rounded-4 h-100 p-4">
+
+                <div class="feature-icon mb-3">
+                    👶
+                </div>
+
+                <h4>
+                    Børn
+                </h4>
+
+                <p class="text-muted">
+                    Opret, se, opdater og slet barnets profil.
+                </p>
+
+                <button class="btn btn-primary rounded-pill mt-auto w-100"
+                        @onclick="OpenChildren">
+
+                    Åbn børn
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Future feature -->
+        <div class="col-12 col-md-6 col-lg-4">
+
+            <div class="feature-card card border-0 shadow-sm rounded-4 h-100 p-4 opacity-75">
+
+                <div class="feature-icon mb-3">
+                    🍼
+                </div>
+
+                <h4>
+                    Madlog
+                </h4>
+
+                <p class="text-muted">
+                    Fremtidig funktion til registrering af måltider.
+                </p>
+
+                <button class="btn btn-outline-secondary rounded-pill w-100"
+                        disabled>
+
+                    Kommer senere
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Future feature -->
+        <div class="col-12 col-md-6 col-lg-4">
+
+            <div class="feature-card card border-0 shadow-sm rounded-4 h-100 p-4 opacity-75">
+
+                <div class="feature-icon mb-3">
+                    🌙
+                </div>
+
+                <h4>
+                    Søvnlog
+                </h4>
+
+                <p class="text-muted">
+                    Fremtidig funktion til registrering af søvn.
+                </p>
+
+                <button class="btn btn-outline-secondary rounded-pill w-100"
+                        disabled>
+
+                    Kommer senere
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Return to BabyFællesskab -->
+    <div class="text-center mt-5">
+
+        <p class="text-muted mb-2">
+            Færdig med BabyLog?
+        </p>
+
+        <a class="btn btn-outline-secondary rounded-pill px-4"
+           href="https://localhost:7049/">
+
+            ← Tilbage til min profil i BabyFællesskab
+
+        </a>
+
+    </div>
+
+</div>
+
+<style>
+
+    .card {
+        background-color: #fffdfb;
+    }
+
+    .dashboard-header {
+        background: linear-gradient(135deg, #fffdfb, #f7e7dc);
+    }
+
+    .feature-card {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .feature-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background-color: #f7e7dc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.7rem;
+    }
+
+    .btn-primary {
+        background-color: #c98f76;
+        border-color: #c98f76;
+    }
+
+        .btn-primary:hover {
+            background-color: #b77c63;
+            border-color: #b77c63;
+        }
+
+</style>
+
+@code {
+
+    // JWT token from query string
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    // Reuse token during navigation
+    private string TokenQuery =>
+        string.IsNullOrWhiteSpace(Token)
+            ? ""
+            : $"?token={Uri.EscapeDataString(Token)}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Save newest token
+        if (!string.IsNullOrWhiteSpace(Token))
+        {
+            TokenStorage.Token = Token;
+
+            // Clear old ViewModel data
+            ChildViewModel.Children.Clear();
+            ChildViewModel.SelectedChild = null;
+            ChildViewModel.CurrentCustomer = null;
+            ChildViewModel.ErrorMessage = null;
+        }
+
+        // Load current customer
+        await ChildViewModel.LoadCurrentCustomerAsync();
+    }
+
+    // Navigate to children page
+    private void OpenChildren()
+    {
+        Navigation.NavigateTo(
+            $"/children{TokenQuery}"
+        );
+    }
+}

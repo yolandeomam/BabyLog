@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="BabyLog/BabyLog.Client/BabyLog.Client.csproj" />
   <Project Path="BabyLog/BabyLog/BabyLog.csproj" />
+  <Project Path="BabyLogTests/BabyLogTests.csproj" Id="02d839c4-4fb4-4df6-acdd-8497492645ce" />
 </Solution>

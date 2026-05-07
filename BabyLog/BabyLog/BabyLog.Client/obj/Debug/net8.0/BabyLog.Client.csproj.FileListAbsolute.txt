@@ -620,6 +620,7 @@ C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Cl
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\BabyLog.Client.AssemblyInfo.cs
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\BabyLog.Client.csproj.CoreCompileInputs.cache
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\BabyLog.Client.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\BabyLog.Client.sourcelink.json
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\webcil\Microsoft.AspNetCore.Authorization.wasm
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\webcil\Microsoft.AspNetCore.Components.wasm
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\webcil\Microsoft.AspNetCore.Components.Forms.wasm
@@ -1020,9 +1021,6 @@ C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Cl
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\compressed\y67383209p-{0}-tptq2av103-tptq2av103.gz
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\compressed\hdw7cpsjdo-{0}-lfu7j35m59-lfu7j35m59.gz
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\compressed\16ipawctht-{0}-oyz0vx2fzb-oyz0vx2fzb.gz
-C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\compressed\vnx33olfpp-{0}-cjppcag2g9-cjppcag2g9.gz
-C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\compressed\xe0v506lip-{0}-qxug369vlc-qxug369vlc.gz
-C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\compressed\bkehutrzb7-{0}-lncvg0orsy-lncvg0orsy.gz
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\staticwebassets.development.json
@@ -1033,3 +1031,7 @@ C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Cl
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\refint\BabyLog.Client.dll
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\BabyLog.Client.pdb
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\ref\BabyLog.Client.dll
+C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\compressed\vnx33olfpp-{0}-tdfxsukvtz-tdfxsukvtz.gz
+C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\compressed\xe0v506lip-{0}-dq1c537xi3-dq1c537xi3.gz
+C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog.Client\obj\Debug\net8.0\compressed\bkehutrzb7-{0}-lk2ckzl325-lk2ckzl325.gz

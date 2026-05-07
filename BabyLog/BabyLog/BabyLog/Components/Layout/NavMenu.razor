@@ -8,23 +8,45 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
+
+        <!-- Dashboard -->
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            <NavLink class="nav-link" href="dashboard">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span>
+                Dashboard
             </NavLink>
         </div>
 
+        <!-- Børn -->
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="children">
+                <span class="bi bi-people-fill-nav-menu" aria-hidden="true"></span>
+                Børn
+            </NavLink>
+        </div>
+
+        <!-- Counter (optional) -->
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>
+                Counter
             </NavLink>
         </div>
 
+        <!-- Weather (optional) -->
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>
+                Weather
             </NavLink>
         </div>
+
+        <!-- Back to BabyFællesskab -->
+        <div class="nav-item px-3">
+            <a class="nav-link" href="https://localhost:7049/">
+                Tilbage til BabyFællesskab
+            </a>
+        </div>
+
     </nav>
 </div>
-

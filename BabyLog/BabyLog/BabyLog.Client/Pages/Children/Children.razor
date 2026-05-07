@@ -1,0 +1,289 @@
+﻿@page "/children"
+@rendermode InteractiveServer
+@inject BabyLog.Client.ViewModels.ChildViewModel ViewModel
+@inject BabyLog.Client.Services.TokenStorageService TokenStorage
+@inject NavigationManager Navigation
+
+<div class="container py-4">
+
+    <!-- Header card -->
+    <div class="children-header card border-0 shadow-sm rounded-4 p-4 mb-4">
+
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+            <!-- Header text -->
+            <div>
+
+                <span class="small text-muted">
+                    BabyLog
+                </span>
+
+                <h2 class="mb-1">
+                    Mine børn
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Her kan du nemt administrere barnets profil.
+                </p>
+
+            </div>
+
+            <!-- Navigation buttons -->
+            <div class="d-flex gap-2 flex-wrap">
+
+                <button class="btn btn-outline-secondary rounded-pill px-4"
+                        @onclick="TilDashboard">
+                    ← Hovedmenu
+                </button>
+
+                <button class="btn btn-primary rounded-pill px-4"
+                        @onclick="OpretBarn">
+                    + Opret barn
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Error message -->
+    @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+    {
+        <div class="alert alert-danger">
+            @ViewModel.ErrorMessage
+        </div>
+    }
+
+    <!-- Empty state -->
+    @if (ViewModel.Children.Count == 0)
+    {
+        <div class="card border-0 shadow-sm text-center p-5 rounded-4">
+
+            <div class="empty-icon mx-auto mb-3">
+                👶
+            </div>
+
+            <h5>
+                Ingen børn registreret endnu
+            </h5>
+
+            <p class="text-muted">
+                Opret dit første barn for at komme i gang med BabyLog.
+            </p>
+
+            <!-- Empty state buttons -->
+            <div class="d-flex justify-content-center gap-2 flex-wrap mt-2">
+
+                <button class="btn btn-outline-secondary rounded-pill px-4"
+                        @onclick="TilDashboard">
+                    Hovedmenu
+                </button>
+
+                <button class="btn btn-primary rounded-pill px-4"
+                        @onclick="OpretBarn">
+                    Opret barn
+                </button>
+
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <!-- Child cards -->
+        <div class="row g-3">
+
+            @foreach (var child in ViewModel.Children)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                        <div class="card-body p-4">
+
+                            <!-- Child header -->
+                            <div class="d-flex align-items-center mb-3">
+
+                                <div class="child-avatar me-3">
+                                    👶
+                                </div>
+
+                                <div>
+
+                                    <h5 class="mb-0">
+                                        @child.FirstName
+                                    </h5>
+
+                                    <small class="text-muted">
+                                        Barnets profil
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Child information -->
+                            <p class="mb-1">
+
+                                <strong>Fødselsdato:</strong>
+                                @child.BirthDate.ToShortDateString()
+
+                            </p>
+
+                            <p class="mb-3">
+
+                                <strong>Køn:</strong>
+                                @child.Gender
+
+                            </p>
+
+                            <!-- CRUD buttons -->
+                            <div class="d-flex gap-2 justify-content-between mt-3">
+
+                                <button class="btn btn-outline-primary btn-sm rounded-pill flex-fill"
+                                        @onclick="() => SeBarn(child.ChildId)">
+                                    Se
+                                </button>
+
+                                <button class="btn btn-outline-secondary btn-sm rounded-pill flex-fill"
+                                        @onclick="() => OpdaterBarn(child.ChildId)">
+                                    Opdater
+                                </button>
+
+                                <button class="btn btn-outline-danger btn-sm rounded-pill flex-fill"
+                                        @onclick="() => SletBarn(child.ChildId)">
+                                    Slet
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+</div>
+
+<style>
+    .card {
+        background-color: #fffdfb;
+    }
+
+    .children-header {
+        background: linear-gradient(135deg, #fffdfb, #f7e7dc);
+    }
+
+    .child-avatar,
+    .empty-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background-color: #f7e7dc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+    }
+
+    .empty-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 2rem;
+    }
+
+    .btn-primary {
+        background-color: #c98f76;
+        border-color: #c98f76;
+    }
+
+        .btn-primary:hover {
+            background-color: #b77c63;
+            border-color: #b77c63;
+        }
+
+    .btn-outline-primary {
+        border-color: #c98f76;
+        color: #c98f76;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #c98f76;
+            color: white;
+        }
+</style>
+
+@code {
+
+    // JWT token from query string
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    // Reuse token during navigation
+    private string TokenQuery =>
+        string.IsNullOrWhiteSpace(Token)
+            ? ""
+            : $"?token={Uri.EscapeDataString(Token)}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Save newest token
+        if (!string.IsNullOrWhiteSpace(Token))
+        {
+            TokenStorage.Token = Token;
+
+            // Clear old ViewModel data
+            ViewModel.Children.Clear();
+            ViewModel.SelectedChild = null;
+            ViewModel.CurrentCustomer = null;
+            ViewModel.ErrorMessage = null;
+        }
+
+        // Load children
+        await ViewModel.LoadChildrenAsync();
+    }
+
+    // Navigate to dashboard
+    private void TilDashboard()
+    {
+        Navigation.NavigateTo(
+            $"/dashboard{TokenQuery}"
+        );
+    }
+
+    // Navigate to create page
+    private void OpretBarn()
+    {
+        Navigation.NavigateTo(
+            $"/children/create{TokenQuery}"
+        );
+    }
+
+    // Navigate to details page
+    private void SeBarn(int id)
+    {
+        Navigation.NavigateTo(
+            $"/children/details/{id}{TokenQuery}"
+        );
+    }
+
+    // Navigate to update page
+    private void OpdaterBarn(int id)
+    {
+        Navigation.NavigateTo(
+            $"/children/update/{id}{TokenQuery}"
+        );
+    }
+
+    // Navigate to delete page
+    private void SletBarn(int id)
+    {
+        Navigation.NavigateTo(
+            $"/children/delete/{id}{TokenQuery}"
+        );
+    }
+}

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BabyLog")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+376410b26311b436e88c0c381e410a0e5964b63d")]
 [assembly: System.Reflection.AssemblyProductAttribute("BabyLog")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BabyLog")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

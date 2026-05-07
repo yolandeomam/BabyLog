@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "BabyLog.Client",
   "resources": {
-    "hash": "sha256-97BZwUhr7POJxlJwWnR2nS3iLD4FOiOY9JDD0PdHrfk=",
+    "hash": "sha256-ZBdGd1zUSgFpK8vUexNizGmb5+5I+EnpOKW9v23bX0A=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-4g0GzvOXSwZvTLca4PrWJkoeltz+V9IF/hEFDcnVros="
     },
@@ -209,10 +209,10 @@
       "mscorlib.wasm": "sha256-OWQk7msdg0kG9vfJqVNUrPJ8JkyUipH2afbnYJLsKjk=",
       "netstandard.wasm": "sha256-+Ya7AWY6kwjwbQw9fHax9L8Qnn+UZKQF05aZE4ZOXiY=",
       "System.Private.CoreLib.wasm": "sha256-ouVBjy2oz9hC308fAFLns0mvmtyaeUDXt3C5DAk1muc=",
-      "BabyLog.Client.wasm": "sha256-iMGxs8LvS61KZ9db5o4bCOOLuTs0tTVeu3XU0I+lF80="
+      "BabyLog.Client.wasm": "sha256-IaAEBB2eqswv6H3nwEsre+VL25oAZoKgleHAwamcUhw="
     },
     "pdb": {
-      "BabyLog.Client.pdb": "sha256-YvSwIgjhTTmsAWj6rdLbSeWHp4UxiC2CmJMgSz7BNIo="
+      "BabyLog.Client.pdb": "sha256-xVTmpDEmxScLruguaJ/U7MG9a38S4l3m9mg1PogZrTE="
     }
   },
   "cacheBootResources": true,

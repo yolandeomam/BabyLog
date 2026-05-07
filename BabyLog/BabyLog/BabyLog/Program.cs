@@ -1,5 +1,10 @@
-using BabyLog.Client.Pages;
+using BabyLog.Client.Services;
+using BabyLog.Client.ViewModels;
 using BabyLog.Components;
+using BabyLog.Data;
+using BabyLog.Repositories;
+using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 
 namespace BabyLog
 {
@@ -9,14 +14,56 @@ namespace BabyLog
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Add Razor components
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
 
+            // Add controllers for API endpoints
+            builder.Services.AddControllers();
+
+            // Register database context
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    sqlOptions => sqlOptions.EnableRetryOnFailure()
+                ));
+
+            // Register repositories
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped<IChildRepository, ChildRepository>();
+
+            // Register HttpClient for BabyLog internal API calls
+            builder.Services.AddScoped(sp =>
+            {
+                var navigationManager = sp.GetRequiredService<NavigationManager>();
+
+                return new HttpClient
+                {
+                    BaseAddress = new Uri(navigationManager.BaseUri)
+                };
+            });
+
+            // Store JWT token received from BabyFællesskab
+            builder.Services.AddScoped<TokenStorageService>();
+
+            // Register API service for Child API inside BabyLog
+            builder.Services.AddScoped<ChildApiService>();
+
+            // Register API service for BabyFællesskab API
+            builder.Services.AddHttpClient<CustomerApiService>(client =>
+            {
+                client.BaseAddress = new Uri(
+                    builder.Configuration["BabyFaellesskabApi:BaseUrl"]!
+                );
+            });
+
+            // Register ViewModels
+            builder.Services.AddScoped<ChildViewModel>();
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Configure HTTP request pipeline
             if (app.Environment.IsDevelopment())
             {
                 app.UseWebAssemblyDebugging();
@@ -24,19 +71,21 @@ namespace BabyLog
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
-
             app.UseStaticFiles();
             app.UseAntiforgery();
 
+            // Map Razor components
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode()
                 .AddInteractiveWebAssemblyRenderMode()
                 .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
+
+            // Map controller-based API endpoints
+            app.MapControllers();
 
             app.Run();
         }
