@@ -1,0 +1,102 @@
+﻿@page "/children/{ChildId:int}/sleep/delete/{SleepId:int}"
+@rendermode InteractiveServer
+@inject BabyLog.Client.ViewModels.SleepViewModel ViewModel
+@inject BabyLog.Client.Services.TokenStorageService TokenStorage
+@inject NavigationManager Navigation
+
+<div class="container py-4">
+
+    <div class="mb-4">
+        <h2 class="mb-1">Slet søvn</h2>
+        <p class="text-muted mb-0">Bekræft sletning af søvnregistreringen.</p>
+    </div>
+
+    @if (ViewModel.SelectedSleep == null)
+    {
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+            <p class="mb-0">Indlæser...</p>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+            <div class="text-center">
+                <div class="delete-icon mb-3">⚠️</div>
+
+                <h4>Er du sikker?</h4>
+
+                <p class="text-muted">
+                    Du er ved at slette søvnregistreringen fra
+                    <strong>@ViewModel.SelectedSleep.SleepDate.ToShortDateString()</strong>.
+                </p>
+
+                <p class="text-muted">Dette kan ikke fortrydes.</p>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button class="btn btn-outline-secondary rounded-pill flex-fill" @onclick="Annuller">
+                        Annuller
+                    </button>
+
+                    <button class="btn btn-danger rounded-pill flex-fill" @onclick="BekræftSlet">
+                        Slet
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .card {
+        background-color: #fffdfb;
+    }
+
+    .delete-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background-color: #fff1e8;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public int ChildId { get; set; }
+
+    [Parameter]
+    public int SleepId { get; set; }
+
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    private string TokenQuery =>
+        string.IsNullOrWhiteSpace(Token)
+            ? ""
+            : $"?token={Uri.EscapeDataString(Token)}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(Token))
+        {
+            TokenStorage.Token = Token;
+            ViewModel.SelectedSleep = null;
+            ViewModel.ErrorMessage = null;
+        }
+
+        await ViewModel.LoadSleepAsync(SleepId);
+    }
+
+    private async Task BekræftSlet()
+    {
+        var success = await ViewModel.DeleteSleepAsync(SleepId);
+
+        if (success)
+            Navigation.NavigateTo($"/children/{ChildId}/sleep{TokenQuery}");
+    }
+
+    private void Annuller() => Navigation.NavigateTo($"/children/{ChildId}/sleep{TokenQuery}");
+}
