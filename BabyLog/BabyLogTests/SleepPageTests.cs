@@ -107,19 +107,19 @@ namespace BabyLogTests.BUnitTests
         [Fact]
         public void SleepGraph_Should_Show_Graph_Sections()
         {
-            // Arrange
+            // Arranging
             JSInterop.Mode = JSRuntimeMode.Loose;
 
             Services.AddSingleton<TokenStorageService>();
             Services.AddSingleton<SleepViewModel, FakeSleepViewModel>();
             Services.AddApexCharts();
 
-            // Act
+            // Acting
             var component = Render<SleepGraph>(
                 parameters => parameters.Add(p => p.ChildId, 1)
             );
 
-            // Assert
+            // Asserting
             Assert.Contains("Søvn på dagen", component.Markup);
             Assert.Contains("Udvikling over ugen", component.Markup);
             Assert.Contains("Udvikling over måneden", component.Markup);
