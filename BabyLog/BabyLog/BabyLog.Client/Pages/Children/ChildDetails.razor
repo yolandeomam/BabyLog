@@ -78,9 +78,14 @@
             </p>
 
             <!-- Action buttons -->
-            <div class="d-flex gap-2 mt-4">
+            <div class="d-flex gap-2 mt-4 flex-wrap">
 
                 <button class="btn btn-primary rounded-pill flex-fill"
+                        @onclick="SeSøvn">
+                    Søvn
+                </button>
+
+                <button class="btn btn-outline-primary rounded-pill flex-fill"
                         @onclick="Opdater">
                     Opdater
                 </button>
@@ -121,6 +126,16 @@
             background-color: #b77c63;
             border-color: #b77c63;
         }
+
+    .btn-outline-primary {
+        border-color: #c98f76;
+        color: #c98f76;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #c98f76;
+            color: white;
+        }
 </style>
 
 @code {
@@ -154,6 +169,14 @@
 
         // Load selected child
         await ViewModel.LoadChildAsync(ChildId);
+    }
+
+    // Navigate to sleep page
+    private void SeSøvn()
+    {
+        Navigation.NavigateTo(
+            $"/children/{ChildId}/sleep{TokenQuery}"
+        );
     }
 
     // Navigate to update page

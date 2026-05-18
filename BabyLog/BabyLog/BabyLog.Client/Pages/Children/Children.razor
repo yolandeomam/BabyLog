@@ -19,11 +19,13 @@
                 </span>
 
                 <h2 class="mb-1">
-                    Mine børn
+                    @(SleepMode ? "Vælg barn til søvnlog" : "Mine børn")
                 </h2>
 
                 <p class="text-muted mb-0">
-                    Her kan du nemt administrere barnets profil.
+                    @(SleepMode
+                                        ? "Vælg hvilket barn du vil registrere eller se søvn for."
+                                        : "Her kan du nemt administrere barnets profil.")
                 </p>
 
             </div>
@@ -36,10 +38,13 @@
                     ← Hovedmenu
                 </button>
 
-                <button class="btn btn-primary rounded-pill px-4"
-                        @onclick="OpretBarn">
-                    + Opret barn
-                </button>
+                @if (!SleepMode)
+                {
+                    <button class="btn btn-primary rounded-pill px-4"
+                            @onclick="OpretBarn">
+                        + Opret barn
+                    </button>
+                }
 
             </div>
 
@@ -106,7 +111,7 @@
                             <div class="d-flex align-items-center mb-3">
 
                                 <div class="child-avatar me-3">
-                                    👶
+                                    @(SleepMode ? "🌙" : "👶")
                                 </div>
 
                                 <div>
@@ -116,7 +121,7 @@
                                     </h5>
 
                                     <small class="text-muted">
-                                        Barnets profil
+                                        @(SleepMode ? "Søvnlog" : "Barnets profil")
                                     </small>
 
                                 </div>
@@ -125,38 +130,44 @@
 
                             <!-- Child information -->
                             <p class="mb-1">
-
                                 <strong>Fødselsdato:</strong>
                                 @child.BirthDate.ToShortDateString()
-
                             </p>
 
                             <p class="mb-3">
-
                                 <strong>Køn:</strong>
                                 @child.Gender
-
                             </p>
 
-                            <!-- CRUD buttons -->
-                            <div class="d-flex gap-2 justify-content-between mt-3">
-
-                                <button class="btn btn-outline-primary btn-sm rounded-pill flex-fill"
-                                        @onclick="() => SeBarn(child.ChildId)">
-                                    Se
+                            <!-- Buttons -->
+                            @if (SleepMode)
+                            {
+                                <button class="btn btn-primary btn-sm rounded-pill w-100"
+                                        @onclick="() => ÅbnSøvnlog(child.ChildId)">
+                                    Åbn søvnlog
                                 </button>
+                            }
+                            else
+                            {
+                                <div class="d-flex gap-2 justify-content-between mt-3">
 
-                                <button class="btn btn-outline-secondary btn-sm rounded-pill flex-fill"
-                                        @onclick="() => OpdaterBarn(child.ChildId)">
-                                    Opdater
-                                </button>
+                                    <button class="btn btn-outline-primary btn-sm rounded-pill flex-fill"
+                                            @onclick="() => SeBarn(child.ChildId)">
+                                        Se
+                                    </button>
 
-                                <button class="btn btn-outline-danger btn-sm rounded-pill flex-fill"
-                                        @onclick="() => SletBarn(child.ChildId)">
-                                    Slet
-                                </button>
+                                    <button class="btn btn-outline-secondary btn-sm rounded-pill flex-fill"
+                                            @onclick="() => OpdaterBarn(child.ChildId)">
+                                        Opdater
+                                    </button>
 
-                            </div>
+                                    <button class="btn btn-outline-danger btn-sm rounded-pill flex-fill"
+                                            @onclick="() => SletBarn(child.ChildId)">
+                                        Slet
+                                    </button>
+
+                                </div>
+                            }
 
                         </div>
 
@@ -223,11 +234,27 @@
     [SupplyParameterFromQuery]
     public string? Token { get; set; }
 
+    // True when user comes from Søvnlog menu
+    [SupplyParameterFromQuery]
+    public bool SleepMode { get; set; }
+
+    // Active token from URL or storage
+    private string ActiveToken =>
+        !string.IsNullOrWhiteSpace(Token)
+            ? Token
+            : TokenStorage.Token ?? "";
+
     // Reuse token during navigation
     private string TokenQuery =>
-        string.IsNullOrWhiteSpace(Token)
+        string.IsNullOrWhiteSpace(ActiveToken)
             ? ""
-            : $"?token={Uri.EscapeDataString(Token)}";
+            : $"?token={Uri.EscapeDataString(ActiveToken)}";
+
+    // Sleep mode query + token
+    private string SleepModeTokenQuery =>
+        string.IsNullOrWhiteSpace(ActiveToken)
+            ? "?sleepMode=true"
+            : $"?sleepMode=true&token={Uri.EscapeDataString(ActiveToken)}";
 
     protected override async Task OnInitializedAsync()
     {
@@ -284,6 +311,14 @@
     {
         Navigation.NavigateTo(
             $"/children/delete/{id}{TokenQuery}"
+        );
+    }
+
+    // Navigate to sleep log for selected child
+    private void ÅbnSøvnlog(int id)
+    {
+        Navigation.NavigateTo(
+            $"/children/{id}/sleep{TokenQuery}"
         );
     }
 }

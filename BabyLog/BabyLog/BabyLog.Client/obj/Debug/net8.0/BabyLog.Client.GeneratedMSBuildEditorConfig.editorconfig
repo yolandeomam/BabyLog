@@ -26,6 +26,10 @@ build_property._RazorSourceGeneratorDebug =
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
+[C:/Users/omamy/Desktop/Uddannelse/5. Semester/BabyLog/BabyLog/BabyLog/BabyLog.Client/Pages/About.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWJvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/omamy/Desktop/Uddannelse/5. Semester/BabyLog/BabyLog/BabyLog/BabyLog.Client/Pages/BabyLogLogin.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQmFieUxvZ0xvZ2luLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
@@ -56,6 +60,26 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/omamy/Desktop/Uddannelse/5. Semester/BabyLog/BabyLog/BabyLog/BabyLog.Client/Pages/Dashboard.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGFzaGJvYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/omamy/Desktop/Uddannelse/5. Semester/BabyLog/BabyLog/BabyLog/BabyLog.Client/Pages/Sleep/CreateSleep.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2xlZXBcQ3JlYXRlU2xlZXAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/omamy/Desktop/Uddannelse/5. Semester/BabyLog/BabyLog/BabyLog/BabyLog.Client/Pages/Sleep/DeleteSleep.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2xlZXBcRGVsZXRlU2xlZXAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/omamy/Desktop/Uddannelse/5. Semester/BabyLog/BabyLog/BabyLog/BabyLog.Client/Pages/Sleep/SleepGraph.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2xlZXBcU2xlZXBHcmFwaC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/omamy/Desktop/Uddannelse/5. Semester/BabyLog/BabyLog/BabyLog/BabyLog.Client/Pages/Sleep/SleepList.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2xlZXBcU2xlZXBMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/omamy/Desktop/Uddannelse/5. Semester/BabyLog/BabyLog/BabyLog/BabyLog.Client/Pages/Sleep/UpdateSleep.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2xlZXBcVXBkYXRlU2xlZXAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/omamy/Desktop/Uddannelse/5. Semester/BabyLog/BabyLog/BabyLog/BabyLog.Client/_Imports.razor]

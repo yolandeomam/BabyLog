@@ -8,12 +8,16 @@
     <!-- Loading message -->
     <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
 
+        <div class="login-icon mx-auto mb-3">
+            👶
+        </div>
+
         <h4 class="mb-3">
             Logger ind i BabyLog...
         </h4>
 
         <p class="text-muted mb-0">
-            Du videresendes automatisk.
+            Du videresendes automatisk til dit dashboard.
         </p>
 
     </div>
@@ -21,11 +25,20 @@
 </div>
 
 <style>
-
     .card {
         background-color: #fffdfb;
     }
 
+    .login-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background-color: #f7e7dc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+    }
 </style>
 
 @code {
@@ -41,19 +54,29 @@
     {
         // Only redirect once
         if (!firstRender || redirected)
+        {
             return Task.CompletedTask;
+        }
 
         redirected = true;
 
         // Save token and redirect
         if (!string.IsNullOrWhiteSpace(Token))
         {
-            // Save newest token
+            // Save newest token from BabyFællesskab
             TokenStorage.Token = Token;
 
-            // Redirect to dashboard
+            // Redirect to dashboard and keep token in URL
             Navigation.NavigateTo(
                 $"/dashboard?token={Uri.EscapeDataString(Token)}",
+                forceLoad: true
+            );
+        }
+        else
+        {
+            // If no token is received, send user back to BabyFællesskab
+            Navigation.NavigateTo(
+                "https://localhost:7049/",
                 forceLoad: true
             );
         }

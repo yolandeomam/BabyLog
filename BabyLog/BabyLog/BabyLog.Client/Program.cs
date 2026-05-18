@@ -1,6 +1,7 @@
 using BabyLog.Client.Services;
 using BabyLog.Client.ViewModels;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using ApexCharts;
 
 namespace BabyLog.Client
 {
@@ -23,6 +24,10 @@ namespace BabyLog.Client
             builder.Services.AddScoped<ChildApiService>();
             builder.Services.AddScoped<CustomerApiService>();
             builder.Services.AddScoped<TokenStorageService>();
+            builder.Services.AddScoped<SleepApiService>();
+            builder.Services.AddScoped<SleepViewModel>();
+
+            builder.Services.AddApexCharts();
 
             // Register ViewModels
             builder.Services.AddScoped<ChildViewModel>();

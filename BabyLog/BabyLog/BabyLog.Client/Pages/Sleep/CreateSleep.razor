@@ -1,0 +1,126 @@
+﻿@page "/children/{ChildId:int}/sleep/create"
+@rendermode InteractiveServer
+@using BabyLog.Client.Models
+@using Microsoft.AspNetCore.Components.Forms
+@inject BabyLog.Client.ViewModels.SleepViewModel ViewModel
+@inject BabyLog.Client.Services.TokenStorageService TokenStorage
+@inject NavigationManager Navigation
+
+<div class="container py-4">
+
+    <div class="mb-4">
+        <h2 class="mb-1">Opret søvn</h2>
+        <p class="text-muted mb-0">Registrer barnets søvnperiode.</p>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+        @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+        {
+            <div class="alert alert-danger">
+                @ViewModel.ErrorMessage
+            </div>
+        }
+
+        <EditForm Model="@sleep" OnValidSubmit="@GemSøvn">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label class="form-label">Søvndato</label>
+                <InputDate class="form-control rounded-pill"
+                           @bind-Value="sleep.SleepDate" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Starttidspunkt</label>
+                <InputText class="form-control rounded-pill"
+                           type="time"
+                           @bind-Value="startTime" />
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Sluttidspunkt</label>
+                <InputText class="form-control rounded-pill"
+                           type="time"
+                           @bind-Value="endTime" />
+            </div>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary rounded-pill flex-fill"
+                        type="submit">
+                    Gem søvn
+                </button>
+
+                <button class="btn btn-outline-secondary rounded-pill flex-fill"
+                        type="button"
+                        @onclick="Annuller">
+                    Annuller
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+<style>
+    .card {
+        background-color: #fffdfb;
+    }
+
+    .btn-primary {
+        background-color: #c98f76;
+        border-color: #c98f76;
+    }
+
+        .btn-primary:hover {
+            background-color: #b77c63;
+            border-color: #b77c63;
+        }
+</style>
+
+@code {
+    [Parameter]
+    public int ChildId { get; set; }
+
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    private string TokenQuery =>
+        string.IsNullOrWhiteSpace(Token)
+            ? ""
+            : $"?token={Uri.EscapeDataString(Token)}";
+
+    private Sleep sleep = new()
+    {
+        SleepDate = DateTime.Today
+    };
+
+    private string startTime = "12:00";
+    private string endTime = "13:00";
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrWhiteSpace(Token))
+        {
+            TokenStorage.Token = Token;
+            ViewModel.ErrorMessage = null;
+        }
+
+        sleep.ChildId = ChildId;
+    }
+
+    private async Task GemSøvn()
+    {
+        sleep.StartTime = TimeSpan.Parse(startTime);
+        sleep.EndTime = TimeSpan.Parse(endTime);
+
+        var success = await ViewModel.CreateSleepAsync(sleep);
+
+        if (success)
+            Navigation.NavigateTo($"/children/{ChildId}/sleep{TokenQuery}");
+    }
+
+    private void Annuller()
+    {
+        Navigation.NavigateTo($"/children/{ChildId}/sleep{TokenQuery}");
+    }
+}

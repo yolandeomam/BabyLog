@@ -1,0 +1,178 @@
+﻿@page "/children/{ChildId:int}/sleep/graphs"
+@rendermode InteractiveServer
+@using ApexCharts
+@using BabyLog.Client.ViewModels
+@using Microsoft.AspNetCore.Components.Forms
+@inject SleepViewModel ViewModel
+@inject BabyLog.Client.Services.TokenStorageService TokenStorage
+@inject NavigationManager Navigation
+
+<div class="container py-4">
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <h2>Søvngrafer</h2>
+
+        <p class="text-muted">
+            Se udvikling i barnets søvn.
+        </p>
+
+        <div class="mb-3">
+            <label class="form-label">
+                Vælg dato
+            </label>
+
+            <InputDate class="form-control"
+                       @bind-Value="ViewModel.SelectedDate"
+                       @bind-Value:after="OnDateChanged" />
+        </div>
+    </div>
+
+    <!-- Daily sleep timeline -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <h4>Søvn på dagen</h4>
+
+        <p class="text-muted">
+            Viser hvornår barnet sov og hvor længe.
+        </p>
+
+        @if (ViewModel.DailySleepPeriods.Count == 0)
+        {
+            <p class="text-muted mb-0">
+                Der er ingen søvnregistreringer for den valgte dato.
+            </p>
+        }
+        else
+        {
+            @foreach (var sleep in ViewModel.DailySleepPeriods)
+            {
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between">
+                        <strong>@sleep.Label</strong>
+
+                        <span>
+                            @sleep.DurationHours.ToString("0.0") timer
+                        </span>
+                    </div>
+
+                    <div class="timeline-bar">
+                        <div class="timeline-fill"
+                             style="
+                                            left:@(sleep.StartHour / 24 * 100)%;
+                                            width:@((sleep.EndHour - sleep.StartHour) / 24 * 100)%;">
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- Weekly Sleep Development -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <h4>Udvikling over ugen</h4>
+
+        <ApexChart TItem="SleepGraphItem">
+            <ApexPointSeries TItem="SleepGraphItem"
+                             Items="@ViewModel.WeeklySleepDevelopment"
+                             Name="Timer"
+                             SeriesType="SeriesType.Line"
+                             XValue="@(e => e.Label)"
+                             YValue="@(e => e.TotalHours)" />
+        </ApexChart>
+    </div>
+
+    <!-- Monthly Sleep Development -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <h4>Udvikling over måneden</h4>
+
+        <ApexChart TItem="SleepGraphItem">
+            <ApexPointSeries TItem="SleepGraphItem"
+                             Items="@ViewModel.MonthlySleepDevelopment"
+                             Name="Timer"
+                             SeriesType="SeriesType.Line"
+                             XValue="@(e => e.Label)"
+                             YValue="@(e => e.TotalHours)" />
+        </ApexChart>
+    </div>
+
+    <!-- Yearly Sleep Development -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <h4>Udvikling over året</h4>
+
+        <ApexChart TItem="SleepGraphItem">
+            <ApexPointSeries TItem="SleepGraphItem"
+                             Items="@ViewModel.YearlySleepDevelopment"
+                             Name="Gennemsnit"
+                             SeriesType="SeriesType.Line"
+                             XValue="@(e => e.Label)"
+                             YValue="@(e => e.TotalHours)" />
+        </ApexChart>
+    </div>
+
+    <!-- Back button -->
+    <div class="mt-4">
+        <button class="btn btn-outline-secondary rounded-pill px-4"
+                @onclick="TilbageTilSøvn">
+            ← Tilbage til søvnlog
+        </button>
+    </div>
+
+</div>
+
+<style>
+    .timeline-bar {
+        position: relative;
+        width: 100%;
+        height: 24px;
+        background-color: #eee;
+        border-radius: 20px;
+        overflow: hidden;
+        margin-top: 10px;
+    }
+
+    .timeline-fill {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        background-color: #c98f76;
+        border-radius: 20px;
+    }
+
+    .card {
+        background-color: #fffdfb;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public int ChildId { get; set; }
+
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    private string TokenQuery =>
+        string.IsNullOrWhiteSpace(Token)
+            ? ""
+            : $"?token={Uri.EscapeDataString(Token)}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(Token))
+        {
+            TokenStorage.Token = Token;
+        }
+
+        await ViewModel.LoadSleepGraphDataAsync(ChildId);
+    }
+
+    private void OnDateChanged()
+    {
+        ViewModel.RefreshGraphs();
+    }
+
+    private void TilbageTilSøvn()
+    {
+        Navigation.NavigateTo(
+            $"/children/{ChildId}/sleep{TokenQuery}"
+        );
+    }
+}

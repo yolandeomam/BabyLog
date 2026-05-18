@@ -1,0 +1,293 @@
+﻿@page "/children/{ChildId:int}/sleep"
+@rendermode InteractiveServer
+@inject BabyLog.Client.ViewModels.SleepViewModel ViewModel
+@inject BabyLog.Client.Services.TokenStorageService TokenStorage
+@inject NavigationManager Navigation
+
+<div class="container py-4">
+
+    <!-- Page header -->
+    <div class="children-header card border-0 shadow-sm rounded-4 p-4 mb-4">
+
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+            <div>
+
+                <span class="small text-muted">
+                    BabyLog
+                </span>
+
+                <h2 class="mb-1">
+                    Søvn
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Her kan du se barnets søvnregistreringer.
+                </p>
+
+            </div>
+
+            <!-- Navigation buttons -->
+            <div class="d-flex gap-2 flex-wrap">
+
+                <button class="btn btn-outline-secondary rounded-pill px-4"
+                        @onclick="TilBørn">
+                    ← Børn
+                </button>
+
+                <button class="btn btn-outline-primary rounded-pill px-4"
+                        @onclick="SeSøvngrafer">
+                    📊 Se søvngrafer
+                </button>
+
+                <button class="btn btn-primary rounded-pill px-4"
+                        @onclick="OpretSøvn">
+                    + Opret søvn
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Error message -->
+    @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+    {
+        <div class="alert alert-danger">
+            @ViewModel.ErrorMessage
+        </div>
+    }
+
+    @if (ViewModel.Sleeps.Count == 0)
+    {
+        <!-- Empty state -->
+        <div class="card border-0 shadow-sm text-center p-5 rounded-4">
+
+            <div class="sleep-icon mx-auto mb-3">
+                🌙
+            </div>
+
+            <h5>
+                Ingen søvnregistreringer endnu
+            </h5>
+
+            <p class="text-muted">
+                Opret den første søvnregistrering for barnet.
+            </p>
+
+            <div class="d-flex justify-content-center gap-2 flex-wrap mt-2">
+
+                <button class="btn btn-outline-primary rounded-pill px-4"
+                        @onclick="SeSøvngrafer">
+                    📊 Se søvngrafer
+                </button>
+
+                <button class="btn btn-primary rounded-pill px-4"
+                        @onclick="OpretSøvn">
+                    Opret søvn
+                </button>
+
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <!-- Sleep cards -->
+        <div class="row g-3">
+
+            @foreach (var sleep in ViewModel.Sleeps)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                        <div class="card-body p-4">
+
+                            <!-- Sleep card header -->
+                            <div class="d-flex align-items-center mb-3">
+
+                                <div class="sleep-icon-small me-3">
+                                    🌙
+                                </div>
+
+                                <div>
+
+                                    <h5 class="mb-0">
+                                        @sleep.SleepDate.ToShortDateString()
+                                    </h5>
+
+                                    <small class="text-muted">
+                                        Søvnregistrering
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Sleep information -->
+                            <p class="mb-1">
+
+                                <strong>Start:</strong>
+                                @sleep.StartTime.ToString(@"hh\:mm")
+
+                            </p>
+
+                            <p class="mb-3">
+
+                                <strong>Slut:</strong>
+                                @sleep.EndTime.ToString(@"hh\:mm")
+
+                            </p>
+
+                            <!-- Action buttons -->
+                            <div class="d-flex gap-2 justify-content-between mt-3">
+
+                                <button class="btn btn-outline-secondary btn-sm rounded-pill flex-fill"
+                                        @onclick="() => OpdaterSøvn(sleep.SleepId)">
+                                    Opdater
+                                </button>
+
+                                <button class="btn btn-outline-danger btn-sm rounded-pill flex-fill"
+                                        @onclick="() => SletSøvn(sleep.SleepId)">
+                                    Slet
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+</div>
+
+<style>
+    .card {
+        background-color: #fffdfb;
+    }
+
+    .children-header {
+        background: linear-gradient(135deg, #fffdfb, #f7e7dc);
+    }
+
+    .sleep-icon,
+    .sleep-icon-small {
+        border-radius: 50%;
+        background-color: #f7e7dc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sleep-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 2rem;
+    }
+
+    .sleep-icon-small {
+        width: 52px;
+        height: 52px;
+        font-size: 1.6rem;
+    }
+
+    .btn-primary {
+        background-color: #c98f76;
+        border-color: #c98f76;
+    }
+
+        .btn-primary:hover {
+            background-color: #b77c63;
+            border-color: #b77c63;
+        }
+
+    .btn-outline-primary {
+        border-color: #c98f76;
+        color: #c98f76;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #c98f76;
+            color: white;
+        }
+</style>
+
+@code {
+
+    // ChildId from route
+    [Parameter]
+    public int ChildId { get; set; }
+
+    // JWT token from query string
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    // Reuse token during navigation
+    private string TokenQuery =>
+        string.IsNullOrWhiteSpace(Token)
+            ? ""
+            : $"?token={Uri.EscapeDataString(Token)}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Save newest token
+        if (!string.IsNullOrWhiteSpace(Token))
+        {
+            TokenStorage.Token = Token;
+
+            // Clear old ViewModel data
+            ViewModel.Sleeps.Clear();
+            ViewModel.SelectedSleep = null;
+            ViewModel.ErrorMessage = null;
+        }
+
+        // Load sleep registrations for selected child
+        await ViewModel.LoadSleepByChildAsync(ChildId);
+    }
+
+    // Navigate back to children page
+    private void TilBørn()
+    {
+        Navigation.NavigateTo(
+            $"/children{TokenQuery}"
+        );
+    }
+
+    // Navigate to create sleep page
+    private void OpretSøvn()
+    {
+        Navigation.NavigateTo(
+            $"/children/{ChildId}/sleep/create{TokenQuery}"
+        );
+    }
+
+    // Navigate to update sleep page
+    private void OpdaterSøvn(int sleepId)
+    {
+        Navigation.NavigateTo(
+            $"/children/{ChildId}/sleep/update/{sleepId}{TokenQuery}"
+        );
+    }
+
+    // Navigate to delete sleep page
+    private void SletSøvn(int sleepId)
+    {
+        Navigation.NavigateTo(
+            $"/children/{ChildId}/sleep/delete/{sleepId}{TokenQuery}"
+        );
+    }
+
+    // Navigate to sleep graphs page
+    private void SeSøvngrafer()
+    {
+        Navigation.NavigateTo(
+            $"/children/{ChildId}/sleep/graphs{TokenQuery}"
+        );
+    }
+}
