@@ -41,7 +41,7 @@ namespace BabyLog.Controllers
             return Ok(child);
         }
 
-        // Creates a new child profile
+        // Creates a new child profile using stored procedure
         // Example: POST api/child
         [HttpPost]
         public async Task<ActionResult<Child>> CreateChild(Child child)
@@ -49,13 +49,12 @@ namespace BabyLog.Controllers
             // Set creation date automatically
             child.ChildCreatedDate = DateTime.UtcNow;
 
-            await _childRepository.AddAsync(child);
-            await _childRepository.SaveAsync();
+            await _childRepository.CreateChildAsync(child);
 
             return Ok(child);
         }
 
-        // Updates an existing child profile
+        // Updates an existing child profile using stored procedure
         // Example: PUT api/child/5
         [HttpPut("{id}")]
         public async Task<ActionResult<Child>> UpdateChild(int id, Child updatedChild)
@@ -68,18 +67,15 @@ namespace BabyLog.Controllers
                 return NotFound();
             }
 
-            // Update child information
-            child.FirstName = updatedChild.FirstName;
-            child.BirthDate = updatedChild.BirthDate;
-            child.Gender = updatedChild.Gender;
+            // Make sure route id is used
+            updatedChild.ChildId = id;
 
-            _childRepository.Update(child);
-            await _childRepository.SaveAsync();
+            await _childRepository.UpdateChildAsync(updatedChild);
 
-            return Ok(child);
+            return Ok(updatedChild);
         }
 
-        // Deletes a child profile
+        // Deletes a child profile using stored procedure
         // Example: DELETE api/child/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteChild(int id)
@@ -92,8 +88,7 @@ namespace BabyLog.Controllers
                 return NotFound();
             }
 
-            _childRepository.Delete(child);
-            await _childRepository.SaveAsync();
+            await _childRepository.DeleteChildAsync(id);
 
             return Ok();
         }

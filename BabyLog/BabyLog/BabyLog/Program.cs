@@ -1,3 +1,4 @@
+using ApexCharts;
 using BabyLog.Client.Services;
 using BabyLog.Client.ViewModels;
 using BabyLog.Components;
@@ -19,6 +20,9 @@ namespace BabyLog
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
 
+            // Register ApexCharts
+            builder.Services.AddApexCharts();
+
             // Add controllers for API endpoints
             builder.Services.AddControllers();
 
@@ -32,6 +36,7 @@ namespace BabyLog
             // Register repositories
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IChildRepository, ChildRepository>();
+            builder.Services.AddScoped<ISleepRepository, SleepRepository>();
 
             // Register HttpClient for BabyLog internal API calls
             builder.Services.AddScoped(sp =>
@@ -47,8 +52,9 @@ namespace BabyLog
             // Store JWT token received from BabyFællesskab
             builder.Services.AddScoped<TokenStorageService>();
 
-            // Register API service for Child API inside BabyLog
+            // Register API services inside BabyLog
             builder.Services.AddScoped<ChildApiService>();
+            builder.Services.AddScoped<SleepApiService>();
 
             // Register API service for BabyFællesskab API
             builder.Services.AddHttpClient<CustomerApiService>(client =>
@@ -60,6 +66,7 @@ namespace BabyLog
 
             // Register ViewModels
             builder.Services.AddScoped<ChildViewModel>();
+            builder.Services.AddScoped<SleepViewModel>();
 
             var app = builder.Build();
 
