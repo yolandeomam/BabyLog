@@ -4,6 +4,7 @@ using BabyLog.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BabyLog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260512120625_AddSleepTable")]
+    partial class AddSleepTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,10 +28,7 @@ namespace BabyLog.Migrations
             modelBuilder.Entity("BabyLog.Models.Child", b =>
                 {
                     b.Property<int>("ChildId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChildId"));
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -49,7 +49,9 @@ namespace BabyLog.Migrations
 
                     b.HasKey("ChildId");
 
-                    b.ToTable("Children", (string)null);
+                    b.ToTable((string)null);
+
+                    b.ToView("vw_Children", (string)null);
                 });
 
             modelBuilder.Entity("BabyLog.Models.Sleep", b =>
@@ -74,7 +76,7 @@ namespace BabyLog.Migrations
 
                     b.HasKey("SleepId");
 
-                    b.ToTable("Sleeps", (string)null);
+                    b.ToTable("Sleeps");
                 });
 #pragma warning restore 612, 618
         }

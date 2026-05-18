@@ -22,6 +22,7 @@ C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bi
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\BabyLog.pdb
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Azure.Core.dll
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Azure.Identity.dll
+C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Blazor-ApexCharts.dll
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Humanizer.dll
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Microsoft.AspNetCore.Authorization.dll
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Microsoft.AspNetCore.Components.dll
@@ -48,6 +49,9 @@ C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bi
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.dll
+C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
+C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Microsoft.Extensions.Http.dll
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
@@ -165,10 +169,10 @@ C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\ob
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\obj\Debug\net8.0\swae.build.ex.cache
+C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\obj\Debug\net8.0\BabyLog.csproj.Up2Date
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\obj\Debug\net8.0\BabyLog.dll
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\obj\Debug\net8.0\refint\BabyLog.dll
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\obj\Debug\net8.0\BabyLog.pdb
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\obj\Debug\net8.0\BabyLog.genruntimeconfig.cache
 C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\obj\Debug\net8.0\ref\BabyLog.dll
-C:\Users\omamy\Desktop\Uddannelse\5. Semester\BabyLog\BabyLog\BabyLog\BabyLog\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

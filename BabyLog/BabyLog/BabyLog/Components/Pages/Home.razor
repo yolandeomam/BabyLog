@@ -1,7 +1,201 @@
 ﻿@page "/"
+@inject BabyLog.Client.Services.TokenStorageService TokenStorage
 
-<PageTitle>Home</PageTitle>
+<PageTitle>BabyLog</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="home-container">
 
-Welcome to your new app.
+    <div class="hero-section">
+
+        <div class="hero-icon">
+            👶
+        </div>
+
+        <span class="hero-label">
+            BabyFællesskab
+        </span>
+
+        <h1>
+            Velkommen til BabyLog
+        </h1>
+
+        <p class="hero-text">
+            BabyLog hjælper forældre med at registrere og følge barnets
+            søvn og udvikling på en enkel, tryg og overskuelig måde.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a class="hero-button primary-button"
+               href="@($"/dashboard{TokenQuery}")">
+                Åbn dashboard
+            </a>
+
+        </div>
+
+        <div class="home-footer-links">
+
+            <a class="footer-link"
+               href="https://localhost:7049/">
+                Tilbage til BabyFællesskab
+            </a>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .home-container {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .hero-section {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #fffdfb, #f7e7dc);
+        border-radius: 32px;
+        padding: 4rem 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    }
+
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            background: rgba(201, 143, 118, 0.08);
+            border-radius: 50%;
+            top: -80px;
+            right: -80px;
+        }
+
+    .hero-icon {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 1.2rem auto;
+        border-radius: 50%;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .hero-label {
+        display: inline-block;
+        background-color: rgba(201, 143, 118, 0.14);
+        color: #8f5f4a;
+        padding: 0.35rem 0.8rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .hero-section h1 {
+        color: #6f4637;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .hero-text {
+        max-width: 760px;
+        margin: auto;
+        color: #6d6d6d;
+        font-size: 1.08rem;
+        line-height: 1.8;
+    }
+
+    .hero-buttons {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .hero-button {
+        padding: 0.9rem 1.6rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.2s ease;
+    }
+
+    .primary-button {
+        background-color: #c98f76;
+        color: white;
+    }
+
+        .primary-button:hover {
+            background-color: #b77c63;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+    .home-footer-links {
+        margin-top: 2rem;
+    }
+
+    .footer-link {
+        color: #8f5f4a;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.2s ease;
+    }
+
+        .footer-link:hover {
+            color: #b77c63;
+        }
+
+    @@media (max-width: 768px) {
+        .hero-section {
+            padding: 3rem 1.5rem;
+        }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+        .hero-text {
+            font-size: 1rem;
+        }
+
+        .hero-buttons {
+            flex-direction: column;
+        }
+
+        .hero-button {
+            width: 100%;
+        }
+    }
+</style>
+
+@code {
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    private string ActiveToken =>
+        !string.IsNullOrWhiteSpace(Token)
+            ? Token
+            : TokenStorage.Token ?? "";
+
+    private string TokenQuery =>
+        string.IsNullOrWhiteSpace(ActiveToken)
+            ? ""
+            : $"?token={Uri.EscapeDataString(ActiveToken)}";
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrWhiteSpace(Token))
+        {
+            TokenStorage.Token = Token;
+        }
+    }
+}

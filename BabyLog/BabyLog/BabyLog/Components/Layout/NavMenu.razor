@@ -1,6 +1,12 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">BabyLog</a>
+        <a class="navbar-brand d-flex align-items-center gap-2" href="dashboard">
+            <span class="brand-icon">👶</span>
+            <div>
+                <span class="brand-title">BabyLog</span>
+                <small class="brand-subtitle">BabyFællesskab</small>
+            </div>
+        </a>
     </div>
 </div>
 
@@ -9,44 +15,226 @@
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
 
+        <!-- Main navigation -->
+        <div class="nav-section-title px-3">
+            Menu
+        </div>
+
         <!-- Dashboard -->
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="dashboard">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span>
-                Dashboard
+                <span class="nav-icon">🏠</span>
+                <span>Dashboard</span>
             </NavLink>
         </div>
 
-        <!-- Børn -->
+        <!-- Children -->
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="children">
-                <span class="bi bi-people-fill-nav-menu" aria-hidden="true"></span>
-                Børn
+                <span class="nav-icon">👶</span>
+                <span>Børn</span>
             </NavLink>
         </div>
 
-        <!-- Counter (optional) -->
+        <!-- Sleep log -->
+        <div class="nav-item px-3">
+
+            <NavLink class="nav-link" href="children?sleepMode=true">
+
+                <span class="nav-icon">
+                    🌙
+                </span>
+
+                <div class="nav-text-group">
+
+                    <span class="nav-main-text">
+                        Søvnlog
+                    </span>
+
+                    <small class="nav-sub-text">
+                        Vælg barn
+                    </small>
+
+                </div>
+
+            </NavLink>
+
+        </div>
+
+        <!-- Future feature -->
+        <div class="nav-item px-3">
+            <div class="nav-link disabled-link">
+                <span class="nav-icon">⭐</span>
+                <span>Udviklingsmilepæle</span>
+                <small class="coming-soon">Senere</small>
+            </div>
+        </div>
+
+        @*
+        <!-- Counter - default Blazor page, hidden in BabyLog -->
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>
                 Counter
             </NavLink>
         </div>
 
-        <!-- Weather (optional) -->
+        <!-- Weather - default Blazor page, hidden in BabyLog -->
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>
                 Weather
             </NavLink>
+        </div>
+        *@
+
+        <!-- Bottom section -->
+        <div class="nav-section-title px-3 mt-4">
+            BabyFællesskab
         </div>
 
         <!-- Back to BabyFællesskab -->
         <div class="nav-item px-3">
-            <a class="nav-link" href="https://localhost:7049/">
-                Tilbage til BabyFællesskab
+            <a class="nav-link back-link" href="https://localhost:7049/">
+                <span class="nav-icon">←</span>
+                <span>BabyFællesskab</span>
             </a>
         </div>
 
     </nav>
 </div>
+
+<style>
+    .top-row {
+        background: linear-gradient(135deg, #8f5f4a, #c98f76);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .nav-scrollable {
+        background: linear-gradient(180deg, #8f5f4a, #6f4637);
+    }
+
+    .navbar-brand {
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        color: white;
+        text-decoration: none;
+    }
+
+    .brand-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background-color: #f7e7dc;
+        color: #6f4637;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .brand-title {
+        display: block;
+        font-size: 1.15rem;
+        line-height: 1.1;
+    }
+
+    .brand-subtitle {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.75);
+        margin-top: 0.1rem;
+    }
+
+    .nav-section-title {
+        margin-top: 1rem;
+        margin-bottom: 0.4rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08rem;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .nav-item {
+        margin-bottom: 0.35rem;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        border-radius: 999px;
+        padding: 0.75rem 1rem;
+        color: rgba(255, 255, 255, 0.88);
+        text-decoration: none;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .nav-link:hover {
+            background-color: rgba(247, 231, 220, 0.16);
+            color: white;
+            transform: translateX(2px);
+        }
+
+        .nav-link.active {
+            background-color: #f7e7dc;
+            color: #5f3a2e;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+        }
+
+    .nav-icon {
+        width: 24px;
+        display: inline-flex;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .disabled-link {
+        opacity: 0.62;
+        cursor: not-allowed;
+    }
+
+        .disabled-link:hover {
+            transform: none;
+            background-color: transparent;
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+    .coming-soon {
+        margin-left: auto;
+        margin-right: 0.2rem;
+        background-color: rgba(247, 231, 220, 0.18);
+        color: #fff7f2;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 62px;
+    }
+
+    .back-link {
+        border: 1px solid rgba(247, 231, 220, 0.25);
+        white-space: nowrap;
+    }
+
+    .nav-text-group {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.1;
+    }
+
+    .nav-main-text {
+        font-weight: 600;
+    }
+
+    .nav-sub-text {
+        font-size: 0.68rem;
+        color: rgba(255, 255, 255, 0.68);
+        margin-top: 0.15rem;
+    }
+</style>
