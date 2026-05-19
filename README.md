@@ -49,7 +49,6 @@ BabyLog kommunikerer med BabyFællesskab gennem token-baseret autentifikation.
 Projektet anvender GitHub Actions til automatisk:
 - build
 - test
-- formatting checks
 ved push og pull requests.
 
 # Kør projektet
