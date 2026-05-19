@@ -34,7 +34,6 @@ Den nuværende version af systemet fokuserer primært på søvnregistrering og s
 * SQL Server
 ## Test
 * BUnit
-* xUnit
 
 # Arkitektur
 Projektet er udviklet med en lagdelt arkitektur og separation of concerns.
@@ -46,6 +45,13 @@ Systemet består blandt andet af:
 * SQL database
 BabyLog kommunikerer med BabyFællesskab gennem token-baseret autentifikation.
 
+# GitHub Actions
+Projektet anvender GitHub Actions til automatisk:
+- build
+- test
+- formatting checks
+ved push og pull requests.
+
 # Kør projektet
 git clone https://github.com/yolandeomam/BabyLog.git 
 dotnet restore 
@@ -53,8 +59,15 @@ dotnet build
 dotnet run
 
 # Fremtidige forbedringer
-
 * Madlog
 * Blelog
 * Udviklingsmilepæle
 * Mobiloptimering
+
+# Fremtidig CI/CD
+Projektet kan senere udvides med automatisk deployment til Azure.
+Det betyder, at GitHub Actions automatisk kan deploye:
+- Blazor app
+- ASP.NET Core API
+når der pushes til `main.
+Dette vil gøre workflowet til en fuld CI/CD pipeline.
