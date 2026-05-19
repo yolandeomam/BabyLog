@@ -1,0 +1,37 @@
+name: BabyLog CI
+
+on:
+  push:
+    branches:
+      - main
+      - feature/*
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+      # Checkout repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Install .NET SDK
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      # Restore NuGet packages
+      - name: Restore dependencies
+        run: dotnet restore BabyLog/BabyLog.slnx
+
+      # Build solution
+      - name: Build project
+        run: dotnet build BabyLog/BabyLog.slnx --no-restore
+
+      # Run BUnit tests
+      - name: Run tests
+        run: dotnet test BabyLog/BabyLog.slnx --no-build
