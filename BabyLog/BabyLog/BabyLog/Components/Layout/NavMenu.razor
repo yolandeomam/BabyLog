@@ -1,6 +1,10 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject BabyLog.Client.Services.TokenStorageService TokenStorage
+@inject NavigationManager Navigation
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center gap-2" href="dashboard">
+        <a class="navbar-brand d-flex align-items-center gap-2"
+           href="@($"/dashboard{TokenQuery}")">
             <span class="brand-icon">👶</span>
             <div>
                 <span class="brand-title">BabyLog</span>
@@ -22,7 +26,8 @@
 
         <!-- Dashboard -->
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="dashboard">
+            <NavLink class="nav-link"
+                     href="@($"/dashboard{TokenQuery}")">
                 <span class="nav-icon">🏠</span>
                 <span>Dashboard</span>
             </NavLink>
@@ -30,7 +35,8 @@
 
         <!-- Children -->
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="children">
+            <NavLink class="nav-link"
+                     href="@($"/children{TokenQuery}")">
                 <span class="nav-icon">👶</span>
                 <span>Børn</span>
             </NavLink>
@@ -38,15 +44,14 @@
 
         <!-- Sleep log -->
         <div class="nav-item px-3">
-
-            <NavLink class="nav-link" href="children?sleepMode=true">
+            <NavLink class="nav-link"
+                     href="@($"/children{SleepModeTokenQuery}")">
 
                 <span class="nav-icon">
                     🌙
                 </span>
 
                 <div class="nav-text-group">
-
                     <span class="nav-main-text">
                         Søvnlog
                     </span>
@@ -54,11 +59,18 @@
                     <small class="nav-sub-text">
                         Vælg barn
                     </small>
-
                 </div>
 
             </NavLink>
+        </div>
 
+        <!-- About -->
+        <div class="nav-item px-3">
+            <NavLink class="nav-link"
+                     href="@($"/about{TokenQuery}")">
+                <span class="nav-icon">ℹ️</span>
+                <span>Om</span>
+            </NavLink>
         </div>
 
         <!-- Future feature -->
@@ -238,3 +250,43 @@
         margin-top: 0.15rem;
     }
 </style>
+
+@code {
+
+    // Token found in current URL
+    private string? UrlToken { get; set; }
+
+    // Active token from URL or token storage
+    private string ActiveToken =>
+        !string.IsNullOrWhiteSpace(UrlToken)
+            ? UrlToken
+            : TokenStorage.Token ?? "";
+
+    // Reuse token during normal navigation
+    private string TokenQuery =>
+        string.IsNullOrWhiteSpace(ActiveToken)
+            ? ""
+            : $"?token={Uri.EscapeDataString(ActiveToken)}";
+
+    // Reuse token when opening children page in sleep mode
+    private string SleepModeTokenQuery =>
+        string.IsNullOrWhiteSpace(ActiveToken)
+            ? "?sleepMode=true"
+            : $"?sleepMode=true&token={Uri.EscapeDataString(ActiveToken)}";
+
+    protected override void OnParametersSet()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("token", out var tokenValue))
+        {
+            UrlToken = tokenValue.ToString();
+
+            if (!string.IsNullOrWhiteSpace(UrlToken))
+            {
+                TokenStorage.Token = UrlToken;
+            }
+        }
+    }
+}

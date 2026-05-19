@@ -1,4 +1,7 @@
 ﻿@page "/about"
+@rendermode InteractiveServer
+@inject BabyLog.Client.Services.TokenStorageService TokenStorage
+@inject NavigationManager Navigation
 
 <PageTitle>Om BabyFællesskab</PageTitle>
 
@@ -28,6 +31,7 @@
 
         <!-- Approach card -->
         <div class="about-card">
+            <div class="about-card-icon">🤎</div>
 
             <h3>
                 Vores tilgang
@@ -38,11 +42,11 @@
                 Systemet skal være nemt at bruge, hurtigt at forstå og give værdi
                 uden at gøre hverdagen mere kompliceret.
             </p>
-
         </div>
 
         <!-- Values card -->
         <div class="about-card">
+            <div class="about-card-icon">✨</div>
 
             <h3>
                 Vores værdier
@@ -53,11 +57,11 @@
                 Forældre skal føle sig støttet og have adgang til funktioner,
                 der giver overblik og ro.
             </p>
-
         </div>
 
         <!-- BabyLog card -->
         <div class="about-card">
+            <div class="about-card-icon">👶</div>
 
             <h3>
                 BabyLog
@@ -65,14 +69,14 @@
 
             <p>
                 BabyLog hjælper indtil nu forældre med at registrere barnets søvn og få
-                et visuelt overblik over søvnmønstre og udvikling over tid. 
-                Senere vil det være muligt at kunne registrere barns madlog, udvikling osv.
+                et visuelt overblik over søvnmønstre og udvikling over tid.
+                Senere vil det være muligt at registrere barnets madlog, udvikling osv.
             </p>
-
         </div>
 
         <!-- Chat community card -->
         <div class="about-card">
+            <div class="about-card-icon">💬</div>
 
             <h3>
                 Chat Community
@@ -82,7 +86,6 @@
                 Chat Community er tænkt som et digitalt fællesskab, hvor forældre
                 kan stille spørgsmål, dele erfaringer og støtte hinanden i hverdagen.
             </p>
-
         </div>
 
     </div>
@@ -90,10 +93,12 @@
     <!-- Back navigation -->
     <div class="about-actions">
 
-        <a class="about-button primary"
-           href="/">
-            Tilbage til forsiden
-        </a>
+        <button class="about-main-button"
+                type="button"
+                @onclick="TilDashboard">
+            <span class="button-icon">←</span>
+            <span>Tilbage til Dashboard</span>
+        </button>
 
     </div>
 
@@ -146,14 +151,20 @@
 
     .about-card {
         background-color: #fffdfb;
-        border-radius: 24px;
+        border-radius: 26px;
         padding: 2rem;
         box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        transition: 0.2s ease;
     }
+
+        .about-card:hover {
+            transform: translateY(-3px);
+        }
 
         .about-card h3 {
             color: #6f4637;
             margin-bottom: 0.8rem;
+            font-weight: 700;
         }
 
         .about-card p {
@@ -162,29 +173,99 @@
             margin-bottom: 0;
         }
 
-    .about-actions {
-        margin-top: 2rem;
+    .about-card-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background-color: #f7e7dc;
+        color: #6f4637;
         display: flex;
-        gap: 1rem;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
+    }
+
+    .about-actions {
+        margin-top: 2.5rem;
+        display: flex;
         justify-content: center;
         flex-wrap: wrap;
     }
 
-    .about-button {
-        padding: 0.85rem 1.5rem;
+    .about-main-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        padding: 0.9rem 1.7rem;
         border-radius: 999px;
-        text-decoration: none;
-        font-weight: 600;
+        border: none;
+        background-color: #c98f76;
+        color: white;
+        font-weight: 700;
+        box-shadow: 0 8px 20px rgba(201, 143, 118, 0.25);
+        cursor: pointer;
+        transition: 0.2s ease;
     }
 
-        .about-button.primary {
-            background-color: #fffdfb;
-            color: #6f4637;
-            border: 1px solid #ead7cc;
+        .about-main-button:hover {
+            background-color: #b77c63;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(201, 143, 118, 0.32);
         }
 
-            .about-button.primary:hover {
-                background-color: #f7e7dc;
-                color: #6f4637;
-            }
+    .button-icon {
+        font-size: 1.1rem;
+    }
+
+    @@media (max-width: 768px) {
+        .about-container {
+            padding: 1rem;
+        }
+
+        .about-hero {
+            padding: 2.5rem 1.5rem;
+        }
+
+        .about-main-button {
+            width: 100%;
+        }
+    }
 </style>
+
+@code {
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    private string ActiveToken =>
+        !string.IsNullOrWhiteSpace(Token)
+            ? Token
+            : TokenStorage.Token ?? "";
+
+    private string TokenQuery =>
+        string.IsNullOrWhiteSpace(ActiveToken)
+            ? ""
+            : $"?token={Uri.EscapeDataString(ActiveToken)}";
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrWhiteSpace(Token))
+        {
+            TokenStorage.Token = Token;
+        }
+    }
+
+    private void TilDashboard()
+    {
+        if (!string.IsNullOrWhiteSpace(ActiveToken))
+        {
+            TokenStorage.Token = ActiveToken;
+        }
+
+        Navigation.NavigateTo(
+            $"/dashboard{TokenQuery}",
+            forceLoad: true
+        );
+    }
+}
