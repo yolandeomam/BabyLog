@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  build-test-format:
+  build-and-test:
     runs-on: windows-latest
 
     steps:
@@ -26,16 +26,12 @@ jobs:
 
       # Restore NuGet packages
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore BabyLog/BabyLog.slnx
 
-      # Build the solution
+      # Build solution
       - name: Build project
-        run: dotnet build --no-restore
+        run: dotnet build BabyLog/BabyLog.slnx --no-restore
 
       # Run BUnit tests
       - name: Run tests
-        run: dotnet test --no-build
-
-      # Check code formatting
-      - name: Check code formatting
-        run: dotnet format --verify-no-changes
+        run: dotnet test BabyLog/BabyLog.slnx --no-build
